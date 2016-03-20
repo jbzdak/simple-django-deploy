@@ -1,0 +1,8 @@
+---
+# defaults file for django-db-deploy
+DJANGO_DATABASE_NAME: "{{DJANGO_APP_NAME}}"
+DJANGO_DATABASE_USER: "{{DJANGO_APP_NAME}}"
+DJANGO_DATABASE_REQS:
+  - postgresql-9.4
+  - postgresql-contrib-9.4
+  - python-psycopg2

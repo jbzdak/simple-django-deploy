@@ -1,0 +1,3 @@
+{% for key, value in DJANGO_APPLICATION_ENVIORMENT.items() %}
+export {{ key|trim }}='{{ value|trim }}'
+{% endfor %}

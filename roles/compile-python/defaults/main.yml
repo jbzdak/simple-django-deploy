@@ -1,0 +1,14 @@
+---
+# defaults file for compile-python
+python:
+  do_tests: false
+  location: /usr/local/python/3.5.1
+  has_builtin_venv: true
+  version: 3.5.1
+  compilation:
+    build_dep:
+     - python3.4
+    dependencies: []
+  download:
+    url: "https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tar.xz"
+    sha256sum: "c6d57c0c366d9060ab6c0cdf889ebf3d92711d466cc0119c441dbf2746f725c9"

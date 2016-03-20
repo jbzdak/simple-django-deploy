@@ -1,0 +1,17 @@
+[Unit]
+Description=Backend app
+After=syslog.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart={{DJANGO_APPLICATION_VENV_DIR}}/bin/uwsgi --ini {{UWSGI_CONFIG_FILE}}
+User={{DJANGO_APP_NAME}}
+WorkingDirectory={{DJANGO_APPLICATION_CHECKOUT_DIR}}
+EnvironmentFile={{DJANGO_APPLICATION_SYSTEMD_ENV_FILE}}
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all

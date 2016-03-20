@@ -1,0 +1,9 @@
+---
+# defaults file for django-nginx
+NGINX_USE_HTTPS: false
+NGINX_DOMAIN_TO_USE: false
+NGINX_SITE_NAME: "{{DJANGO_APP_NAME}}"
+
+
+NGINX_REQUIRED_PACKAGES:
+  - nginx-full

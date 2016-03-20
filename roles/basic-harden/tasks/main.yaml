@@ -1,0 +1,34 @@
+---
+- name: create provision user
+# Provision user is NOT in sudo group we will add his priveleges via
+# sudoers file
+  user: name={{PROVISION_USER}} shell=/bin/bash system=yes
+        password=! groups=
+- name: update sudoers
+  template: src=sudoers.txt dest=/etc/sudoers validate='visudo -cf %s'
+- name: create .ssh
+  file: path=/home/{{PROVISION_USER}}/.ssh owner={{PROVISION_USER}}
+        group={{PROVISION_USER}} mode=700 state=directory
+- name: update authorized keys
+  template: src=authorized_keys dest=/home/{{PROVISION_USER}}/.ssh/authorized_keys
+            owner={{PROVISION_USER}}
+- name: update apt
+  apt: name=aptitude state=present
+- name: update apt
+  apt: update_cache=yes upgrade=safe
+- name: update sources apt
+  copy: src=sources.list dest=/etc/apt/sources.list
+- name: Create deny-ssh-group
+  group: name=deny-ssh system=yes state=present
+- name: update sshd server
+  copy: src=sshd_config dest=/etc/ssh/sshd_config
+  notify: restart sshd
+- name: install ufw
+  apt: name=ufw state=present
+- name: Reset the firewall (purges any additional rules)
+  ufw: state=reset
+- name: Insert ufw rules
+  ufw: rule={{item.rule}} proto={{item.proto}} port={{item.port}}
+  with_items: "{{BASIC_HARDEN_UFW.basic_ports}}"
+- name: Enable policy
+  ufw: policy={{BASIC_HARDEN_UFW.default_policy}} state=enabled logging=on

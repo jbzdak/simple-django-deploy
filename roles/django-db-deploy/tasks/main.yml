@@ -1,0 +1,19 @@
+---
+# tasks file for django-db-deploy
+- name: install required packages
+  apt: name={{item}} state=present
+  with_items: "{{DJANGO_DATABASE_REQS}}"
+
+- name: create psql db
+  postgresql_db: name="{{DJANGO_DATABASE_NAME}}" state=present
+  become: true
+  become_user: postgres
+
+- name: create psql user
+  postgresql_user:
+    name: "{{DJANGO_DATABASE_USER}}"
+    db: "{{DJANGO_DATABASE_NAME}}"
+    state: present
+  become: true
+  become_user: postgres
+

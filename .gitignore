@@ -1,0 +1,6 @@
+/host_vars
+/group_vars
+/hosts
+/.idea
+/.vagrant
+*.retry

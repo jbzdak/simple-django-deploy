@@ -1,0 +1,20 @@
+upstream django {
+   server unix://{{UWSGI_SOCKET}};
+}
+
+server {
+    listen 80;
+
+    server_name {{DJANGO_APPLICATION_DOMAIN}};
+
+    client_max_body_size 2M;   # adjust to taste
+
+    location /static {
+      alias {{DJANGO_APPLICATION_STATIC_FILES_DIR}};
+    }
+
+    location / {
+       uwsgi_pass  django;
+       include     /etc/nginx/uwsgi_params;
+    }
+}

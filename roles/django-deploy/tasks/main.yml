@@ -1,0 +1,60 @@
+---
+# tasks file for django-deploy
+
+- name: Create django user
+  user: name={{DJANGO_SYSTEM_USER}} home={{DJANGO_APP_USER_HOME}} move_home=yes
+- name: Install private key [create .ssh]
+  file:
+    name: "{{DJANGO_APP_USER_HOME}}/.ssh"
+    mode: "700"
+    owner: "{{DJANGO_SYSTEM_USER}}"
+    state: directory
+- name: Install private key [create .ssh]
+  template:
+    dest: "{{DJANGO_APP_USER_HOME}}/.ssh/id_rsa"
+    mode: "600"
+    src:  "id_rsa"
+    owner: "{{DJANGO_SYSTEM_USER}}"
+
+
+- name: save app env file
+  template: src=webapp_env dest={{DJANGO_APPLICATION_ENV_FILE}}
+
+- name: Install required packages [default]
+  apt: name={{item}} state=present
+  with_items: "{{django_app_role_default_required_system_packages}}"
+- name: Install required packages [user specified]
+  apt: name={{item}} state=present
+  with_items: "{{DJANGO_APP_REQUIRED_SYSTEM_PACKAGES.install}}"
+- name: Install required packages[user specified]
+  apt: name={{item}} state=build-dep
+  with_items: "{{DJANGO_APP_REQUIRED_SYSTEM_PACKAGES.build_dep}}"
+- name: Checkout repo
+  git:
+    repo: "{{DJANGO_APPLICATION_REPO_URL}}"
+    dest: "{{DJANGO_APPLICATION_CHECKOUT_DIR}}"
+    version: "{{DJANGO_APPLICATION_REPO_URL_REPO_REF}}"
+    accept_hostkey: yes
+    key_file: "{{DJANGO_APP_USER_HOME}}/.ssh/id_rsa"
+  notify: restart appserver
+- name: virtualenv
+  pip:
+    virtualenv: "{{DJANGO_APPLICATION_VENV_DIR}}"
+    virtualenv_command: "/usr/local/python/3.5.1/bin/pyvenv"
+    requirements: "{{DJANGO_APPLICATION_REQUIREMENTS}}"
+  notify: restart appserver
+
+- name: make static dir
+  file: name={{DJANGO_APPLICATION_STATIC_FILES_DIR}} state=directory
+
+- name: collectstatic
+  include: "_call_manage_command.yaml"
+  vars:
+    manage_py_command: collectstatic
+
+- name: migrate
+  include: "_call_manage_command.yaml"
+  vars:
+    manage_py_command: migrate
+  become: true
+  become_user: "{{ DJANGO_SYSTEM_USER }}"

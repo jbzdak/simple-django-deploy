@@ -1,0 +1,16 @@
+PROVISION_USER: provision
+PROVISION_USER_AUTHORIZED_KEYS: ""
+
+
+BASIC_HARDEN_UFW:
+  default_policy: deny
+  basic_ports:
+    - proto: tcp
+      port: 22
+      rule: allow
+    - proto: tcp
+      port: 80
+      rule: allow
+    - proto: tcp
+      port: 443
+      rule: allow

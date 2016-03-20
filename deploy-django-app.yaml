@@ -1,0 +1,11 @@
+---
+- hosts: all
+  user: "{{PROVISION_USER}}"
+  become: true
+  roles:
+    - "basic-harden"
+    - "compile-python"
+    - "django-db-deploy"
+    - "django-deploy"
+    - "django-uwsgi-systemd"
+    - "django-nginx"

@@ -1,0 +1,4 @@
+---
+# handlers file for django-nginx
+- name: restart ngingx
+  service: name=nginx state=restarted

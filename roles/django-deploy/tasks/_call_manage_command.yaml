@@ -1,0 +1,7 @@
+---
+- name: call manage py
+  shell: >
+    . {{DJANGO_APPLICATION_ENV_FILE}} &&
+    {{DJANGO_APPLICATION_PYTHON}} {{DJANGO_APPLICATION_MANAGE_PY}}
+    {{manage_py_command}} {{manage_py_default_opts}}
+
