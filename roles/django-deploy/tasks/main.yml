@@ -36,13 +36,11 @@
     version: "{{DJANGO_APPLICATION_REPO_URL_REPO_REF}}"
     accept_hostkey: yes
     key_file: "{{DJANGO_APP_USER_HOME}}/.ssh/id_rsa"
-  notify: restart appserver
 - name: virtualenv
   pip:
     virtualenv: "{{DJANGO_APPLICATION_VENV_DIR}}"
     virtualenv_command: "/usr/local/python/3.5.1/bin/pyvenv"
     requirements: "{{DJANGO_APPLICATION_REQUIREMENTS}}"
-  notify: restart appserver
 
 - name: make static dir
   file: name={{DJANGO_APPLICATION_STATIC_FILES_DIR}} state=directory
