@@ -12,12 +12,12 @@
 - name: update authorized keys
   template: src=authorized_keys dest=/home/{{PROVISION_USER}}/.ssh/authorized_keys
             owner={{PROVISION_USER}}
+- name: update sources apt
+  copy: src=sources.list dest=/etc/apt/sources.list
 - name: update apt
   apt: name=aptitude state=present
 - name: update apt
   apt: update_cache=yes upgrade=safe
-- name: update sources apt
-  copy: src=sources.list dest=/etc/apt/sources.list
 - name: Create deny-ssh-group
   group: name=deny-ssh system=yes state=present
 - name: update sshd server
