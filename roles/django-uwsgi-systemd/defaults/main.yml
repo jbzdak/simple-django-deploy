@@ -11,3 +11,4 @@ UWSGI_MODULE: null
 
 
 DJANGO_APPLICATION_SYSTEMD_ENV_FILE: "/etc/{{DJANGO_APP_NAME}}.env"
+VIRTUALENV_COMMAND: "{{python.location}}/bin/pyvenv"
