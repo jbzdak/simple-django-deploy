@@ -10,5 +10,4 @@ A simple deployer for a minimum django project sandbox includes:
 * Setup UWSGI ran from systemd 
 * Setup of nginx. 
 
-Not really done, left a lot of boilerplate code from Galaxy, and some missing 
-features. 
+This works (I have deployed some small production systems using it)
