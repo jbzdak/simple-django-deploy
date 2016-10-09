@@ -11,8 +11,10 @@
 - name: Ensure uwsgi
   pip:
     virtualenv: "{{DJANGO_APPLICATION_VENV_DIR}}"
-    virtualenv_command: "/usr/local/python/3.5.1/bin/pyvenv"
+    virtualenv_command: "{{ VIRTUALENV_COMMAND }}"
     name: uwsgi
+  become: true
+  become_user: "{{ DJANGO_SYSTEM_USER }}"
 
 - name: Create uwsgi dir
   file: name={{UWSGI_FOLDER}} state=directory owner={{DJANGO_APP_NAME}}

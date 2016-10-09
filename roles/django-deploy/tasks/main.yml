@@ -16,7 +16,16 @@
     src:  "id_rsa"
     owner: "{{DJANGO_SYSTEM_USER}}"
 
-
+- name: Disable strict key checking on repositories
+  lineinfile:
+    create: yes
+    dest: "{{DJANGO_APP_USER_HOME}}/.ssh/config"
+    mode: "0600"
+    line: "\nHost {{ item }}\n\tStrictHostKeyChecking no\n"
+  with_items:
+    - github.com
+    - gitlab.com
+    - bitbucket.org
 - name: save app env file
   template: src=webapp_env dest={{DJANGO_APPLICATION_ENV_FILE}}
 
@@ -29,6 +38,7 @@
 - name: Install required packages[user specified]
   apt: name={{item}} state=build-dep
   with_items: "{{DJANGO_APP_REQUIRED_SYSTEM_PACKAGES.build_dep}}"
+
 - name: Checkout repo
   git:
     repo: "{{DJANGO_APPLICATION_REPO_URL}}"
@@ -36,11 +46,16 @@
     version: "{{DJANGO_APPLICATION_REPO_URL_REPO_REF}}"
     accept_hostkey: yes
     key_file: "{{DJANGO_APP_USER_HOME}}/.ssh/id_rsa"
+  become: true
+  become_user: "{{ DJANGO_SYSTEM_USER }}"
+
 - name: virtualenv
   pip:
     virtualenv: "{{DJANGO_APPLICATION_VENV_DIR}}"
-    virtualenv_command: "/usr/local/python/3.5.1/bin/pyvenv"
+    virtualenv_command: "{{ VIRTUALENV_COMMAND }}"
     requirements: "{{DJANGO_APPLICATION_REQUIREMENTS}}"
+  become: true
+  become_user: "{{ DJANGO_SYSTEM_USER }}"
 
 - name: make static dir
   file: name={{DJANGO_APPLICATION_STATIC_FILES_DIR}} state=directory
