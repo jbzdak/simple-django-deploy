@@ -13,7 +13,6 @@
     virtualenv: "{{DJANGO_APPLICATION_VENV_DIR}}"
     virtualenv_command: "/usr/local/python/3.5.1/bin/pyvenv"
     name: uwsgi
-  notify: restart systemd services
 
 - name: Create uwsgi dir
   file: name={{UWSGI_FOLDER}} state=directory owner={{DJANGO_APP_NAME}}
@@ -29,10 +28,8 @@
     src: webapp.unit
     dest: /etc/systemd/system/{{UWSGI_SYSTEMD_SERVICE}}.service
 
-  notify: restart systemd services
-
 - name: enable services
-  service: name={{UWSGI_SYSTEMD_SERVICE}}.service enabled=yes state=started
+  service: name={{UWSGI_SYSTEMD_SERVICE}}.service enabled=yes state=restarted
 
 - name: restart appserver
   service: name={{ UWSGI_SYSTEMD_SERVICE }} state=restarted
