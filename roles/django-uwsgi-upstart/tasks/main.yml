@@ -1,0 +1,24 @@
+- name: save systemd env file
+  template: src=systemd_webapp_env.txt dest={{DJANGO_APPLICATION_ENV_FILE}}
+
+- name: add user to www-data group
+  user:
+    name: "{{DJANGO_SYSTEM_USER}}"
+    append: yes
+    groups: www-data
+
+- name: Ensure uwsgi
+  pip:
+    virtualenv: "{{DJANGO_APPLICATION_VENV_DIR}}"
+    virtualenv_command: "/usr/local/python/3.5.1/bin/pyvenv"
+    name: uwsgi
+
+- name: Create uwsgi dir
+  file: name={{UWSGI_FOLDER}} state=directory owner={{DJANGO_APP_NAME}}
+
+- name: Copy uwsgi ini file
+  template:
+    src: uwsgi.ini
+    dest: "{{UWSGI_CONFIG_FILE}}"
+    owner: "{{DJANGO_APP_NAME}}"
+
