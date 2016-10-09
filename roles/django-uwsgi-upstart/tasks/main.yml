@@ -1,6 +1,5 @@
----
 - name: save systemd env file
-  template: src=systemd_webapp_env.txt dest={{DJANGO_APPLICATION_SYSTEMD_ENV_FILE}}
+  template: src=systemd_webapp_env.txt dest={{DJANGO_APPLICATION_ENV_FILE}}
 
 - name: add user to www-data group
   user:
@@ -23,13 +22,3 @@
     dest: "{{UWSGI_CONFIG_FILE}}"
     owner: "{{DJANGO_APP_NAME}}"
 
-- name: Copy systemd files
-  template:
-    src: webapp.unit
-    dest: /etc/systemd/system/{{UWSGI_SYSTEMD_SERVICE}}.service
-
-- name: enable services
-  service: name={{UWSGI_SYSTEMD_SERVICE}}.service enabled=yes state=restarted
-
-- name: restart appserver
-  service: name={{ UWSGI_SYSTEMD_SERVICE }} state=restarted
