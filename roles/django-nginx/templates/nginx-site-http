@@ -2,6 +2,15 @@ upstream django {
    server unix://{{UWSGI_SOCKET}};
 }
 
+
+server {
+    listen 80;
+
+    server_name _;
+
+    return 400;
+}
+
 server {
     listen 80;
 
